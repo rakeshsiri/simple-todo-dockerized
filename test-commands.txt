@@ -1,0 +1,17 @@
+docker exec -it database bash
+mongo admin -u root -p rootpassword --authenticationDatabase todos
+
+curl -X POST -H "Content-Type: application/json" -d '{"data":[{
+  "task" : "test 13",
+  "time_hr" : 0,
+  "status" : 0
+},
+{
+  "task" : "1234",
+  "time_hr" : 5,
+  "status" : 1
+}
+]}' http://localhost:5000/add_task
+
+curl -i http://localhost:5000/
+curl -i http://localhost:5000/get_tasks

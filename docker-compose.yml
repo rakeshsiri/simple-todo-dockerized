@@ -1,0 +1,50 @@
+version: '3.7'
+services:
+  frontend:
+    build: frontend_app
+    container_name: frontend
+    hostname: node_host
+    command: node server.js
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend_app:/node_web
+    #to control startup order
+    depends_on:
+      - backend
+    links:
+      - backend
+
+  backend:
+    build: backend_app
+    container_name: backend
+    hostname: flask_host
+    command: python -u app.py
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./backend_app:/python-flask
+    #to control startup order
+    depends_on:
+      - db
+    links:
+      - db
+
+  db:
+    image: mongo:4.2.2
+    container_name: database
+    hostname: mongodb_host
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=rootpassword
+      - MONGO_INITDB_DATABASE=todos
+    ports:
+      - "0.0.0.0:27017:27017"
+    volumes:
+      # - mongodb_data_container:/data/db
+      - ./data:/data/db
+
+volumes:
+  mongodb_data_container:
+
+
